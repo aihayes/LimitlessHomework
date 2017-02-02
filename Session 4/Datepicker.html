@@ -1,0 +1,296 @@
+<html>
+<style>
+	body {
+		font-family:Verdana,sans-serif;
+	}
+	.table { 
+	    display: table;
+	}
+	.header {
+		display: table-caption;
+		background: #00BFFF;
+		width:100%;
+		margin:auto;
+	}
+	.prev, .next {
+		width: 20px;
+		height: 20px;
+		top: 0;  
+		bottom: 0;  
+		-webkit-filter: invert(100%); 
+		filter: invert(100%);
+	}
+	.prev { 
+		float:left;
+	}
+	.next {
+		float:right;
+	}
+	.monthYear {
+		color: white;
+    	font-size: 20px;
+    	text-align:center;
+	}
+	.tableRow {
+		display: table-row;
+		margin: 0;
+	}
+	.weekdayCell, .dateCell {
+		display: table-cell;
+		padding: 10px 10px;
+		border-width:1px;
+	    margin: 0; 
+	}
+	.weekdayCell {
+		border-bottom: 2px solid #D3D3D3;
+	}
+</style>
+<body>
+	<script>
+		(function createDatePicker() {
+			var todaysDate;
+
+			/*
+			 * Initialise creation of datepicker element
+			 */
+			function createDOMs(inputDate,locale) {
+				var monthName,
+					currentYear,
+					datePicker,
+					monthView;
+				
+				if(isDate(inputDate)){
+					monthName = findMonthName(inputDate,locale);
+					currentYear = inputDate.getFullYear();
+					datePicker = document.createElement('div');
+					monthView = createMonthView(inputDate,monthName,currentYear);
+					datePicker.appendChild(monthView);
+					document.body.appendChild(datePicker);
+				} else {
+					alert('Input date must be an object of type Date.');
+				}
+			}
+
+			/*
+			 * Find the full name of month
+			 */
+			function findMonthName(dateObj,locale) {
+				return dateObj.toLocaleString(locale, { month: "long" });
+			}
+
+			/*
+			 * Create the table div for the datepicker
+			 */
+			function createMonthView(inputDate,monthName,yearValue) {
+				var monthView,
+					startDate;
+
+				monthView = document.createElement('div');
+				monthView.setAttribute('class','table');
+				monthView = createHeader(monthView,monthName,yearValue);
+				monthView = createWeekdayRow(monthView);
+				startDate = findFirstSundayDate(inputDate);
+				monthView = createDateRows(monthView,startDate);
+
+				return monthView;
+			}
+
+			/*
+			 * Create the table caption with the month, year, and switcher chevrons
+			 */
+			function createHeader(monthView,monthName,yearValue) {
+				var monthHeader;
+
+				monthHeader = document.createElement('div');
+				monthHeader.setAttribute('class','header');
+				monthHeader = addSwitchIconsToHeader(monthHeader);
+				monthHeader = addMonthAndYearToHeader(monthHeader,monthName,yearValue);
+				monthView.appendChild(monthHeader);
+
+				return monthView;
+			}
+
+			/*
+			 * Create the month and year div for the table caption
+			 */
+			function addMonthAndYearToHeader(elementDOM,monthName,yearValue) {
+				var monthDOM,
+					yearDOM;
+
+				monthDOM = document.createElement('div');
+				monthDOM.setAttribute('class','monthYear');
+				monthDOM.innerText = monthName + ' ' + yearValue;
+				elementDOM.appendChild(monthDOM);
+
+				return elementDOM;
+			}
+
+			/*
+			 * Add left and right chevrons to the table caption
+			 */
+			function addSwitchIconsToHeader(elementDOM) {
+				var leftArrrow,
+					rightArrow;
+
+				leftArrrow = createArrowElement("https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-arrow-left-128.png",'prev');
+				rightArrow = createArrowElement("https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-arrow-right-128.png",'next');
+
+				elementDOM.appendChild(leftArrrow);
+				elementDOM.appendChild(rightArrow);
+
+				return elementDOM;
+			}
+
+			/*
+			 * Create an img element from a src with a specified classname
+			 */ 
+			function createArrowElement(src,className) {
+				var createArrow;
+
+				createArrow = document.createElement('img');
+				createArrow.setAttribute('class',className);
+				createArrow.setAttribute('src', src);
+
+				return createArrow;
+			}
+
+			/*
+			 * Create the row of weekdays in the datepicker table
+			 */
+			function createWeekdayRow(monthView) {
+				var weekdayRow,
+					weekdayNames;
+
+				weekdayRow = document.createElement('div');
+				weekdayRow.setAttribute('class','tableRow');
+				
+				weekdayNames = findDaysOfTheWeek("en");
+				weekdayRow = createWeekdayDOM(weekdayNames,weekdayRow);
+				monthView.appendChild(weekdayRow);
+
+				return monthView;
+			}
+
+			/*
+			 * Find the shortened name values for the days of the week (starting from Sunday) for a specified locale
+			 */
+			function findDaysOfTheWeek(locale) {
+				var weekdayArray,
+					dateObj,
+					loopLength;
+
+				weekdayArray = [];
+				for(var i = 1; loopLength = 8, i < loopLength; i += 1) {
+					dateObj = new Date(2017,0,i,0,0,0,0);
+					weekdayArray[i-1] = dateObj.toLocaleString(locale, { weekday: "short" });
+				}
+
+				return weekdayArray;
+			}
+
+			/*
+			 * Create a row of weekdayCell divs with the values of the days of the week from the input array
+			 */
+			function createWeekdayDOM(inputArray,outputDOM) {
+				var loopLength,
+					elementDOM;
+
+				if(Object.prototype.toString.call(inputArray) == '[object Array]'){
+					for(var i = 0; loopLength = inputArray.length, i < loopLength; i += 1) {
+						elementDOM = document.createElement('div');
+						elementDOM.setAttribute('class','weekdayCell');
+						elementDOM.innerText = inputArray[i];
+						outputDOM.appendChild(elementDOM);
+					}
+				} else {
+					alert('Input parameter must be an array.');
+				}
+
+				return outputDOM;
+			}
+
+			/*
+			 * Returns the date of the first Sunday on the calendar - either the first day of the month or the most recent Sunday in the previous month
+			 */
+			function findFirstSundayDate(inputDate) {
+				var firstDayOfMonth,
+					startingDay,
+					startDate;
+
+				if(isDate(inputDate)){
+					firstDayOfMonth = new Date(inputDate.getFullYear(), inputDate.getMonth(), 1);
+					startingDay = firstDayOfMonth.getDay();
+
+					// Sunday === 0
+					if(startingDay === 0) {
+						startDate = firstDayOfMonth;
+					} else {
+						startDate = new Date(firstDayOfMonth);
+						// Current date minus the current day number of the week will give Sunday
+						// Date object handles negative values to find date in previous month
+						startDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
+					}
+					return startDate;
+				} else {
+					return 'Input date must be a date object.';
+				}
+
+			}
+
+			/*
+			 * Creates 5 rows of dates on the calendar, starting from the first Sunday on the calendar
+			 */
+			function createDateRows(monthView,startDate) {
+				var numberOfRows,
+					numberOfCells,
+					elementDOM,
+					outputDOM;
+
+				if(isDate(startDate)){
+					for(var i = 0; numberOfRows = 5, i < numberOfRows; i += 1) {
+						outputDOM = document.createElement('div');
+						outputDOM.setAttribute('class','tableRow');
+						for(var j = 0; numberOfCells = 7, j < numberOfCells; j += 1) {
+							elementDOM = document.createElement('div');
+							elementDOM.setAttribute('class','dateCell');
+							elementDOM.innerText = startDate.getDate();
+							outputDOM.appendChild(elementDOM);
+							startDate = addOneDay(startDate);
+						}
+						monthView.appendChild(outputDOM);
+					}
+					return monthView;
+				} else {
+					return 'Start date for calendar must be an object of type Date.';
+				}
+			}
+
+			/*
+			 * Adds one day to a specific date
+			 */
+			function addOneDay(inputDate) {
+			    var outputDate;
+			    if(isDate(inputDate)) {
+					outputDate = new Date(inputDate);
+			    	outputDate.setDate(outputDate.getDate() + 1);
+			    } else {
+			    	outputDate = 'Input variable must be a date object.';
+			    }
+			    return outputDate;
+			}
+
+			/*
+			 * Function to check if input variable is a Date object
+			 */
+			function isDate(date){
+				return (Object.prototype.toString.call(date) === '[object Date]');
+			}
+
+			todaysDate = new Date();
+			todaysDate.setFullYear(1991,4,15);
+			createDOMs(todaysDate,"en");
+
+		})();
+	</script>
+</body>
+</html>

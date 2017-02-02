@@ -1,0 +1,105 @@
+<html>
+<style>
+	.arrayDOM {
+		display: block;
+		border: 2px;
+		border-style: solid;
+		padding: 10px 10px 10px 10px;
+		margin: 5px 5px 5px 5px;
+		border-radius: 5px;
+		border-color: #D3D3D3;
+		position: relative;
+		word-wrap: break-word;
+	}
+	.icon {
+		height: 20px;
+		width: 20px;
+		position: absolute;  
+		top: 0;  
+		bottom: 0;  
+		right: 0;
+		margin: auto;
+	}
+</style>
+<body>
+	<script>
+		(function createDOMElementsFromArray() {        
+			var randomArray;
+
+			function generateRandomStr(minStrLength,maxStrLength) {
+				var outputStr,
+					possibleCharacters,
+					strLength,
+					loopLength; 
+
+				outputStr = "";
+				possibleCharacters= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_";
+				strLength = getRandomInt(minStrLength,maxStrLength);
+				if(!isNaN(strLength)){
+					for(var i = 0; loopLength = strLength, i < loopLength; i += 1) {
+						outputStr += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+					}
+				} else {
+					outputStr = 'Parameter ' + strLength + ' must be a number.';
+				}
+
+				return outputStr;
+			}
+
+			function getRandomInt(min, max) {
+				return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+
+			function generateRandomArray(arraySize,minStrLength,maxStrLength) {
+				var outputArray,
+					loopLength; 
+
+				outputArray = [];
+				if(!isNaN(arraySize)){
+					for(var i = 0; loopLength = arraySize, i < loopLength; i += 1) {
+						outputArray[i] = generateRandomStr(minStrLength,maxStrLength);
+					}
+					return outputArray;
+				} else {
+					return 'Input parameters must be numbers.';
+				}
+			}
+
+			function createDOMs(inputArray) {
+				var loopLength,
+					elementDOM;
+
+				if(Object.prototype.toString.call(inputArray) == '[object Array]'){
+					for(var i = 0; loopLength = inputArray.length, i < loopLength; i += 1) {
+						elementDOM = document.createElement('div');
+						elementDOM.setAttribute('class','arrayDOM');
+						elementDOM = addContentToDOM(inputArray[i],elementDOM);
+						document.body.appendChild(elementDOM);
+					}
+				} else {
+					alert('Input parameter must be an array.');
+				}
+			}
+
+			function addContentToDOM(inputString,elementDOM) {
+				elementDOM.innerText = inputString;
+				elementDOM = addCloseIconToDOM(elementDOM);
+				return elementDOM;
+			}
+
+			function addCloseIconToDOM(elementDOM) {
+				var createA;
+
+				createA = document.createElement('img');
+				createA.setAttribute('class','icon');
+				createA.setAttribute('src', "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/White_X_in_red_background.svg/1024px-White_X_in_red_background.svg.png");
+				elementDOM.appendChild(createA);
+				return elementDOM;
+			}
+
+			randomArray = generateRandomArray(300,65,80);
+			createDOMs(randomArray);
+		})();
+	</script>
+</body>
+</html>
