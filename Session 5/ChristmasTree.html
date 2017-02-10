@@ -9,6 +9,35 @@
 	As you can see in "data" every object contains its parent's id.
 	See who can do it in a very efficient way.!
 	 */
+	// // Output
+	// var processData = {
+	// 	root: {
+	// 		id: '1',
+	// 		name: 'abc',
+	// 		parent: '',
+	// 		children: [
+	// 			{
+	// 				id: '2',
+	// 				name: 'abc',
+	// 				parent: '1',
+	// 				children: [
+	// 					{
+	// 						id: '3',
+	// 						name: 'abc',
+	// 						parent: '2',
+	// 						children: []
+	// 					},
+	// 					{
+	// 						id: '4',
+	// 						name: 'abc',
+	// 						parent: '2',
+	// 						children: []
+	// 					}
+	// 				]
+	// 			}
+	// 		]
+	// 	}
+	// }
 	
 	(function christmasTree() {
 		'use strict';
@@ -17,8 +46,7 @@
 			processData;
 
 		function createChristmasTree(inputData) {
-			var processDataMap,
-				christmasTree;
+			var processDataMap;
 			// create a map of the data elements with an extra parameter for its array of children
 			if(isArray(inputData)){
 				processDataMap = createProcessDataMap(inputData);
@@ -42,18 +70,14 @@
 		function createTree(processDataMap) {
 			var tree = {}, 
 				treeEle;
-			console.log(processDataMap);
 			for (var id in processDataMap) {
 				if (processDataMap.hasOwnProperty(id)) {
 					treeEle = processDataMap[id];
-					console.log(treeEle);
 					// If the element has a parent id, push it to the children on the processDataMap for the parent element
 					if (treeEle.parent) {
-						console.log(treeEle["parent"]);
-						console.log(processDataMap[2]);
 						processDataMap[treeEle["parent"]]["children"].push(treeEle);
 					}
-					// If the element has no parent id, push it straight to the tree array
+					// If the element has no parent id, push it straight to the tree array as the root element
 					else {
 						tree["root"] = treeEle;
 					}
@@ -77,36 +101,6 @@
 		processData = createChristmasTree(data);
 		console.log(processData);
 		console.log(JSON.stringify(processData, null, 4));
-		// // Output
-		// var processData = {
-		// 	root: {
-		// 		id: '1',
-		// 		name: 'abc',
-		// 		parent: '',
-		// 		children: [
-		// 			{
-		// 				id: '2',
-		// 				name: 'abc',
-		// 				parent: '1',
-		// 				children: [
-		// 					{
-		// 						id: '3',
-		// 						name: 'abc',
-		// 						parent: '2',
-		// 						children: []
-		// 					},
-		// 					{
-		// 						id: '4',
-		// 						name: 'abc',
-		// 						parent: '2',
-		// 						children: []
-		// 					}
-		// 				]
-		// 			}
-		// 		]
-		// 	}
-		// }
-
 	})();
 
 	</script>
