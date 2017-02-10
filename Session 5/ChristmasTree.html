@@ -9,43 +9,106 @@
 	As you can see in "data" every object contains its parent's id.
 	See who can do it in a very efficient way.!
 	 */
-	// Input
-	var data = [
-	    {"Id":"1", "Name":"abc", "parent":""},  
-	    {"Id":"2", "Name":"abc", "parent":"1"},
-	    {"Id":"3", "Name":"abc", "parent":"2"},
-	    {"Id":"4", "Name":"abc", "parent":"2"}
-	];
+	
+	(function christmasTree() {
+		'use strict';
 
-	// Output
-	var processData = {
-		root: {
-			id: '1',
-			name: 'abc',
-			parent: '',
-			children: [
-				{
-					id: '2',
-					name: 'abc',
-					parent: '1',
-					children: [
-						{
-							id: '3',
-							name: 'abc',
-							parent: '2',
-							children: []
-						},
-						{
-							id: '4',
-							name: 'abc',
-							parent: '2',
-							children: []
-						}
-					]
-				}
-			]
+		var data,
+			processData;
+
+		function createChristmasTree(inputData) {
+			var processDataMap,
+				christmasTree;
+			// create a map of the data elements with an extra parameter for its array of children
+			if(isArray(inputData)){
+				processDataMap = createProcessDataMap(inputData);
+				return createTree(processDataMap);
+			}
+			return 'Input data must be an array';
 		}
-	}
+
+		function createProcessDataMap(inputData) {
+			var processDataMap = {},
+				inputDataEle;
+			// create a map of the data elements with an extra parameter for its array of children
+			for(var i = 0, len = inputData.length; i < len; i++) {
+				inputDataEle = inputData[i];
+				processDataMap[inputDataEle.Id] = inputDataEle;
+				processDataMap[inputDataEle.Id]["children"] = [];
+			}
+			return processDataMap;
+		}
+
+		function createTree(processDataMap) {
+			var tree = {}, 
+				treeEle;
+			console.log(processDataMap);
+			for (var id in processDataMap) {
+				if (processDataMap.hasOwnProperty(id)) {
+					treeEle = processDataMap[id];
+					console.log(treeEle);
+					// If the element has a parent id, push it to the children on the processDataMap for the parent element
+					if (treeEle.parent) {
+						console.log(treeEle["parent"]);
+						console.log(processDataMap[2]);
+						processDataMap[treeEle["parent"]]["children"].push(treeEle);
+					}
+					// If the element has no parent id, push it straight to the tree array
+					else {
+						tree["root"] = treeEle;
+					}
+				}
+			}
+			return tree;
+		}
+
+		function isArray(inputValue) {		
+			return (Object.prototype.toString.call(inputValue) === '[object Array]');
+		}
+
+		// Input
+		data = [
+		    {"Id":"1", "Name":"abc", "parent":""},  
+		    {"Id":"2", "Name":"abc", "parent":"1"},
+		    {"Id":"3", "Name":"abc", "parent":"2"},
+		    {"Id":"4", "Name":"abc", "parent":"2"}
+		];
+
+		processData = createChristmasTree(data);
+		console.log(processData);
+		console.log(JSON.stringify(processData, null, 4));
+		// // Output
+		// var processData = {
+		// 	root: {
+		// 		id: '1',
+		// 		name: 'abc',
+		// 		parent: '',
+		// 		children: [
+		// 			{
+		// 				id: '2',
+		// 				name: 'abc',
+		// 				parent: '1',
+		// 				children: [
+		// 					{
+		// 						id: '3',
+		// 						name: 'abc',
+		// 						parent: '2',
+		// 						children: []
+		// 					},
+		// 					{
+		// 						id: '4',
+		// 						name: 'abc',
+		// 						parent: '2',
+		// 						children: []
+		// 					}
+		// 				]
+		// 			}
+		// 		]
+		// 	}
+		// }
+
+	})();
+
 	</script>
 </body>
 </html>

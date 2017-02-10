@@ -42,6 +42,10 @@
 		}
 	};
 
+	var factory = function() {
+		
+	};
+
 	var makeIcon = function(config) {
 		var loading = {
 			sizes: {
@@ -55,10 +59,12 @@
 				}
 			}
 			ele: $('<div>'),
+			
 			init: function() {
 				this.ele.style.height = this.sizes[config.size].height;
 				this.ele.style.width = this.sizes[config.size].width;
 			}
+
 			size: config.size || 'tiny',
 			LIFE_SPAN: 10000,
 			show: function() {

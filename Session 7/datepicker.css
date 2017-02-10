@@ -1,0 +1,44 @@
+body {
+	font-family:Verdana,sans-serif;
+}
+.table { 
+    display: table;
+}
+.header {
+	display: table-caption;
+	background: #00BFFF;
+	width:100%;
+	margin:auto;
+}
+.prev, .next {
+	width: 20px;
+	height: 20px;
+	top: 0;  
+	bottom: 0;  
+	-webkit-filter: invert(100%); 
+	filter: invert(100%);
+}
+.prev { 
+	float:left;
+}
+.next {
+	float:right;
+}
+.monthYear {
+	color: white;
+	font-size: 20px;
+	text-align:center;
+}
+.tableRow {
+	display: table-row;
+	margin: 0;
+}
+.weekdayCell, .dateCell {
+	display: table-cell;
+	padding: 10px 10px;
+	border-width:1px;
+    margin: 0; 
+}
+.weekdayCell {
+	border-bottom: 2px solid #D3D3D3;
+}
