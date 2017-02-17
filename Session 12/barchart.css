@@ -1,0 +1,12 @@
+.chart {
+	border: 1px solid #555;
+	transform: rotate(-90deg);
+}
+
+.chart__bar {
+	width: 0;
+	background-color: #333;
+	margin-bottom: 5px;
+	height: 20px;
+	transition: width 1s linear;
+}
