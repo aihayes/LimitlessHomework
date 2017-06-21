@@ -12,8 +12,7 @@ Reply with a copy of your attempt to be reviewed. */
 		iterationsUntilMatch;
 
 	function createArrayOfNumbers(arraySize) {
-		var outputArray,
-			loopLength;
+		var outputArray;
 
 		outputArray = [];
 		if(!isNaN(arraySize) && Number(arraySize) !== 0){

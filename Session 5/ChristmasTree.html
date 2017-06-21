@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <style>
 
@@ -100,7 +101,10 @@
 
 		processData = createChristmasTree(data);
 		console.log(processData);
-		console.log(JSON.stringify(processData, null, 4));
+		// stringify accepts two optional parameters (VALUE,REPLACER,SPACE) 
+		// replacer can be a function to transform/modify the key-value pairs of the object/array in value
+		// space add indentation/whitespace/line breaks - number = no of spaces at each level, non-empty string = indent with string contents at each level
+		console.log(JSON.stringify(processData,null,4));
 	})();
 
 	</script>
